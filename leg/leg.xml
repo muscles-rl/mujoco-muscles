@@ -1,0 +1,193 @@
+<mujoco model="floor">
+  <compiler boundmass="1e-05" boundinertia="1e-11" balanceinertia="true" coordinate="local" angle="radian" eulerseq="xyz"/>
+  <option timestep="0.002" cone="elliptic" noslip_iterations="5" noslip_tolerance="0.0"/>
+  <size njmax="500" nconmax="150"/>
+  <visual>
+    <headlight ambient="0.4 0.4 0.4" diffuse="0.8 0.8 0.8" specular="0.1 0.1 0.1"/>
+    <map znear="0.01"/>
+    <scale forcewidth="0.01" contactwidth="0.06" contactheight="0.01" jointwidth="0.01" framelength="0.3" framewidth="0.01"/>
+  </visual>
+  <default>
+    <default class="/"/>
+    <default class="walker/">
+      <joint solimplimit="0. 0.99 0.01" stiffness="1.0" armature="0.01" damping="0.05"/>
+      <equality solimp="0.000000000000000e+00 9.990000000000000e-01 1.000000000000000e-04"/>
+      <tendon stiffness="40.0"/>
+      <general ctrllimited="true" ctrlrange="-1. 0." dyntype="filter" dynprm="0.1"/>
+      <default class="walker/wrapping">
+        <geom type="cylinder" contype="0" conaffinity="0" group="3" rgba="0.5 0.5 0.5 0.2" mass="0.0"/>
+      </default>
+      <default class="walker/upper_joint">
+        <joint stiffness="5.0" armature="0.1" damping="2.0"/>
+      </default>
+      <default class="walker/direct">
+        <general ctrlrange="-1. 1."/>
+      </default>
+    </default>
+  </default>
+  <asset>
+    <texture name="groundplane" type="2d" builtin="checker" rgb1="0.2 0.3 0.4" rgb2="0.1 0.2 0.3" mark="edge" markrgb="0.8 0.8 0.8" width="300" height="300"/>
+    <material name="groundplane" class="/" texture="groundplane" texrepeat="3. 3." texuniform="true" reflectance="0.2"/>
+    <mesh name="walker/pelvis" class="walker/" file="pelvis-64424d4d51a352fd673d18bcd4048c677e971954.stl"/>
+    <mesh name="walker/femur" class="walker/" file="femur-79aa2c161a4ddfb8a06ba0028f0344b1a18f73f3.stl"/>
+    <mesh name="walker/tibia" class="walker/" file="tibia-13b417146a0cebc7d0db45757ec7f7efebf448be.stl"/>
+    <mesh name="walker/fibula" class="walker/" file="fibula-d88ee81b99806c294f5dbcc1e7476de551e38cd7.stl"/>
+    <mesh name="walker/talus" class="walker/" file="talus-3471284b55698f381db0e1b5d14a3133735eb69f.stl"/>
+    <mesh name="walker/foot" class="walker/" file="foot-19704e2f58e74fb59680c0586987cf67a4eb00b6.stl"/>
+    <mesh name="walker/bofoot" class="walker/" file="bofoot-0d8af1519688da9648afdb2e342a739f4a918f8c.stl"/>
+  </asset>
+  <worldbody>
+    <camera name="top_camera" class="/" fovy="10.0581471636" pos="0. 0. 10." zaxis="0. 0. 10."/>
+    <camera name="side_camera" class="/" fovy="10.0581471636" pos="0. -10. 0.5." zaxis="0. -10. 0."/>
+    <body name="walker/">
+      <light name="walker//unnamed_light_0" class="walker/" mode="trackcom" pos="0. 0. 3."/>
+      <body name="walker/ground" pos="0. 0. 0.">
+        <body name="walker/pelvis" pos="0. 0. 0.94" euler="1.57079632679 0. 0.">
+          <inertial pos="-0.0707 0. 0." mass="11.777" fullinertia="0.1028 0.0871 0.0579 0. 0. 0."/>
+          <body name="walker/femur_r" pos="-0.0707 -0.0661 0.0835">
+            <joint name="walker/hip_flexion_r" class="walker/" type="hinge" axis="0. 0. 1." limited="true" range="-2.0943951 2.0943951"/>
+            <joint name="walker/hip_adduction_r" class="walker/" type="hinge" axis="1. 0. 0." limited="true" range="-2.0943951 2.0943951"/>
+            <joint name="walker/hip_rotation_r" class="walker/" type="hinge" axis="0. 1. 0." limited="true" range="-2.0943951 2.0943951"/>
+            <inertial pos="0. -0.17 0." mass="9.3014" fullinertia="0.1339 0.0351 0.1412 0. 0. 0."/>
+            <body name="walker/tibia_r" pos="-0.005 -0.395264 0.">
+              <joint name="walker/knee_angle_r" class="walker/" type="hinge" axis="0. 0. 1." limited="true" range="-2.0943951 0.17453293"/>
+              <inertial pos="0. -0.1867 0." mass="3.7075" fullinertia="0.0504 0.0051 0.0511 0. 0. 0."/>
+              <body name="walker/talus_r" pos="0. -0.43 0.">
+                <joint name="walker/ankle_angle_r" class="walker/" type="hinge" axis="0. 0. 1." limited="true" range="-1.57079633 1.57079633"/>
+                <inertial pos="0. 0. 0." mass="0.1" fullinertia="0.001 0.001 0.001 0. 0. 0."/>
+                <body name="walker/calcn_r" pos="-0.04877 -0.04195 0.00792">
+                  <inertial pos="0.1 0.03 0." mass="1.25" fullinertia="0.0014 0.0039 0.0041 0. 0. 0."/>
+                  <body name="walker/toes_r" pos="0.1788 -0.002 0.00108">
+                    <inertial pos="0.0346 0.006 -0.0175" mass="0.2166" fullinertia="0.0001 0.0002 0.0001 0. 0. 0."/>
+                    <geom name="walker/bofoot" class="walker/" type="mesh" group="1" mesh="walker/bofoot"/>
+                  </body>
+                  <site name="walker/med_gas_r-P3" class="walker/" group="3" size="0.003" pos="0. 0.031 -0.0053"/>
+                  <site name="walker/soleus_r-P2" class="walker/" group="3" size="0.003" pos="0. 0.031 -0.0053"/>
+                  <site name="walker/tib_ant_r-P3" class="walker/" group="3" size="0.003" pos="0.1166 0.0178 -0.0305"/>
+                  <geom name="walker/foot" class="walker/" type="mesh" group="1" mesh="walker/foot"/>
+                </body>
+                <geom name="walker/talus" class="walker/" type="mesh" group="1" mesh="walker/talus"/>
+              </body>
+              <site name="walker/semimem_r-P3" class="walker/" group="3" size="0.003" pos="-0.027 -0.04771 -0.01957"/>
+              <site name="walker/bifemsh_r-P2" class="walker/" group="3" size="0.003" pos="-0.0301 -0.036 0.02943"/>
+              <site name="walker/bifemsh_r-P3" class="walker/" group="3" size="0.003" pos="-0.0234 -0.0563 0.0343"/>
+              <site name="walker/soleus_r-P1" class="walker/" group="3" size="0.003" pos="-0.0024 -0.1533 0.0071"/>
+              <site name="walker/tib_ant_r-P1" class="walker/" group="3" size="0.003" pos="0.0179 -0.1624 0.0115"/>
+              <site name="walker/tib_ant_r-P2" class="walker/" group="3" size="0.003" pos="0.0329 -0.3951 -0.0177"/>
+              <site name="walker/semimem_r-P2" class="walker/" group="3" size="0.003" pos="-0.0348 -0.03519 -0.01891"/>
+              <site name="walker/rect_fem_r-P3" class="walker/" group="3" size="0.003" pos="0.0617576 0.020984 0.0014"/>
+              <site name="walker/vas_int_r-P4" class="walker/" group="3" size="0.003" pos="0.0554632 0.0252923 0.0018"/>
+              <geom name="walker/tibia" class="walker/" type="mesh" group="1" mesh="walker/tibia"/>
+              <geom name="walker/fibula" class="walker/" type="mesh" group="1" mesh="walker/fibula"/>
+            </body>
+            <site name="walker/glut_med2_r-P2" class="walker/" group="3" size="0.003" pos="-0.0258 -0.0058 0.0527"/>
+            <site name="walker/add_mag1_r-P2" class="walker/" group="3" size="0.003" pos="-0.0045 -0.1211 0.0339"/>
+            <site name="walker/bifemsh_r-P1" class="walker/" group="3" size="0.003" pos="0.005 -0.2111 0.0234"/>
+            <site name="walker/glut_max2_r-P3" class="walker/" group="3" size="0.003" pos="-0.0426 -0.053 0.0293"/>
+            <site name="walker/glut_max2_r-P4" class="walker/" group="3" size="0.003" pos="-0.0156 -0.1016 0.0419"/>
+            <site name="walker/psoas_r-P4" class="walker/" group="3" size="0.003" pos="0.0016 -0.0507 0.0038"/>
+            <site name="walker/psoas_r-P5" class="walker/" group="3" size="0.003" pos="-0.0188 -0.0597 0.0104"/>
+            <site name="walker/vas_int_r-P1" class="walker/" group="3" size="0.003" pos="0.029 -0.1924 0.031"/>
+            <site name="walker/vas_int_r-P2" class="walker/" group="3" size="0.003" pos="0.0335 -0.2084 0.0285"/>
+            <site name="walker/med_gas_r-P1" class="walker/" group="3" size="0.003" pos="-0.019 -0.3929 -0.0235"/>
+            <site name="walker/rect_fem_r-P2" class="walker/" group="3" size="0.003" pos="0.0334 -0.403 0.0019"/>
+            <site name="walker/vas_int_r-P3" class="walker/" group="3" size="0.003" pos="0.0343 -0.403 0.0055"/>
+            <site name="walker/med_gas_r-P2" class="walker/" group="3" size="0.003" pos="-0.03 -0.4022 -0.0258"/>
+            <geom name="walker/femur" class="walker/" type="mesh" group="1" mesh="walker/femur"/>
+          </body>
+          <site name="walker/glut_med2_r-P1" class="walker/" group="3" size="0.003" pos="-0.0855 0.0445 0.0766"/>
+          <site name="walker/add_mag1_r-P1" class="walker/" group="3" size="0.003" pos="-0.0732 -0.1174 0.0255"/>
+          <site name="walker/semimem_r-P1" class="walker/" group="3" size="0.003" pos="-0.1192 -0.09747 0.07151"/>
+          <site name="walker/glut_max2_r-P1" class="walker/" group="3" size="0.003" pos="-0.1349 0.0176 0.0563"/>
+          <site name="walker/glut_max2_r-P2" class="walker/" group="3" size="0.003" pos="-0.1376 -0.052 0.0914"/>
+          <site name="walker/psoas_r-P1" class="walker/" group="3" size="0.003" pos="-0.0647 0.0887 0.0289"/>
+          <site name="walker/psoas_r-P2" class="walker/" group="3" size="0.003" pos="-0.0238 -0.057 0.0759"/>
+          <site name="walker/rect_fem_r-P1" class="walker/" group="3" size="0.003" pos="-0.0295 -0.0311 0.0968"/>
+        </body>
+      </body>
+    </body>
+  </worldbody>
+  <tendon>
+    <spatial name="walker/abd_r" class="walker/" range="0. 0.0265" width="0.002" rgba="0.95 0.3 0.3 1.">
+      <site site="walker/glut_med2_r-P1"/>
+      <site site="walker/glut_med2_r-P2"/>
+    </spatial>
+    <spatial name="walker/add_r" class="walker/" range="0. 0.03" width="0.002" rgba="0.95 0.3 0.3 1.">
+      <site site="walker/add_mag1_r-P1"/>
+      <site site="walker/add_mag1_r-P2"/>
+    </spatial>
+    <spatial name="walker/hamstrings_r" class="walker/" range="0. 0.1745" width="0.002" rgba="0.95 0.3 0.3 1.">
+      <site site="walker/semimem_r-P1"/>
+      <site site="walker/semimem_r-P2"/>
+      <site site="walker/semimem_r-P3"/>
+    </spatial>
+    <spatial name="walker/bifemsh_r" class="walker/" range="0. 0.0585" width="0.002" rgba="0.95 0.3 0.3 1.">
+      <site site="walker/bifemsh_r-P1"/>
+      <site site="walker/bifemsh_r-P2"/>
+      <site site="walker/bifemsh_r-P3"/>
+    </spatial>
+    <spatial name="walker/glut_max_r" class="walker/" range="0. 0.024" width="0.002" rgba="0.95 0.3 0.3 1.">
+      <site site="walker/glut_max2_r-P1"/>
+      <site site="walker/glut_max2_r-P2"/>
+      <site site="walker/glut_max2_r-P3"/>
+      <site site="walker/glut_max2_r-P4"/>
+    </spatial>
+    <spatial name="walker/iliopsoas_r" class="walker/" range="0. 0.065" width="0.002" rgba="0.95 0.3 0.3 1.">
+      <site site="walker/psoas_r-P1"/>
+      <site site="walker/psoas_r-P2"/>
+      <site site="walker/psoas_r-P4"/>
+      <site site="walker/psoas_r-P5"/>
+    </spatial>
+    <spatial name="walker/rect_fem_r" class="walker/" range="0. 0.173" width="0.002" rgba="0.95 0.3 0.3 1.">
+      <site site="walker/rect_fem_r-P1"/> 
+      <!-- <site site="walker/rect_fem_r-P2"/> -->
+      <site site="walker/rect_fem_r-P3"/>
+    </spatial>
+    <spatial name="walker/vasti_r" class="walker/" range="0. 0.051" width="0.002" rgba="0.95 0.3 0.3 1.">
+      <site site="walker/vas_int_r-P1"/>
+      <site site="walker/vas_int_r-P2"/>
+      <!-- <site site="walker/vas_int_r-P3"/> -->
+      <site site="walker/vas_int_r-P4"/>
+    </spatial>
+    <spatial name="walker/gastroc_r" class="walker/" range="0. 0.192" width="0.002" rgba="0.95 0.3 0.3 1.">
+      <site site="walker/med_gas_r-P1"/>
+      <site site="walker/med_gas_r-P2"/>
+      <site site="walker/med_gas_r-P3"/>
+    </spatial>
+    <spatial name="walker/soleus_r" class="walker/" range="0. 0.122" width="0.002" rgba="0.95 0.3 0.3 1.">
+      <site site="walker/soleus_r-P1"/>
+      <site site="walker/soleus_r-P2"/>
+    </spatial>
+    <spatial name="walker/tib_ant_r" class="walker/" range="0. 0.119" width="0.002" rgba="0.95 0.3 0.3 1.">
+      <site site="walker/tib_ant_r-P1"/>
+      <site site="walker/tib_ant_r-P2"/>
+      <site site="walker/tib_ant_r-P3"/>
+    </spatial>
+  </tendon>
+  <actuator>
+    <general name="walker/abd_r" class="walker/" gear="4460.290481" tendon="walker/abd_r"/>
+    <general name="walker/add_r" class="walker/" gear="3931.800000000000182" tendon="walker/add_r"/>
+    <general name="walker/hamstrings_r" class="walker/" gear="4105.465573999999833" tendon="walker/hamstrings_r"/>
+    <general name="walker/bifemsh_r" class="walker/" gear="557.114754098359981" tendon="walker/bifemsh_r"/>
+    <general name="walker/glut_max_r" class="walker/" gear="3337.583607000000029" tendon="walker/glut_max_r"/>
+    <general name="walker/iliopsoas_r" class="walker/" gear="2697.344262000000072" tendon="walker/iliopsoas_r"/>
+    <general name="walker/rect_fem_r" class="walker/" gear="2191.740983606559894" tendon="walker/rect_fem_r"/>
+    <general name="walker/vasti_r" class="walker/" gear="9593.950820000000022" tendon="walker/vasti_r"/>
+    <general name="walker/gastroc_r" class="walker/" gear="4690.573769999999968" tendon="walker/gastroc_r"/>
+    <general name="walker/soleus_r" class="walker/" gear="7924.996721000000434" tendon="walker/soleus_r"/>
+    <general name="walker/tib_ant_r" class="walker/" gear="2116.818162000000029" tendon="walker/tib_ant_r"/>
+  </actuator>
+  <sensor>
+    <tendonpos name="walker/abd_r" tendon="walker/abd_r"/>
+    <tendonpos name="walker/add_r" tendon="walker/add_r"/>
+    <tendonpos name="walker/hamstrings_r" tendon="walker/hamstrings_r"/>
+    <tendonpos name="walker/bifemsh_r" tendon="walker/bifemsh_r"/>
+    <tendonpos name="walker/glut_max_r" tendon="walker/glut_max_r"/>
+    <tendonpos name="walker/iliopsoas_r" tendon="walker/iliopsoas_r"/>
+    <tendonpos name="walker/rect_fem_r" tendon="walker/rect_fem_r"/>
+    <tendonpos name="walker/vasti_r" tendon="walker/vasti_r"/>
+    <tendonpos name="walker/gastroc_r" tendon="walker/gastroc_r"/>
+    <tendonpos name="walker/soleus_r" tendon="walker/soleus_r"/>
+    <tendonpos name="walker/tib_ant_r" tendon="walker/tib_ant_r"/>
+  </sensor>
+</mujoco>
